@@ -1,0 +1,57 @@
+services:
+
+  textes-legaux-db:
+    image: postgres:16
+    container_name: textes-legaux-db
+
+    environment:
+      POSTGRES_DB: textes-legaux
+      POSTGRES_USER: textes-legaux_app
+      POSTGRES_PASSWORD: change-me
+
+    ports:
+      - "5435:5432"
+
+    volumes:
+      - textes-legaux-db-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U textes-legaux_app -d textes-legaux"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  service-textes-legaux:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name:  service-textes-legaux
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://textes-legaux-db:5432/textes-legaux
+      SPRING_DATASOURCE_USERNAME: textes-legaux_app
+      SPRING_DATASOURCE_PASSWORD: change-me
+      SPRING_PROFILES_ACTIVE: docker, piste-sandbox
+      PISTE_BASE_URL: ${PISTE_BASE_URL}
+      PISTE_TOKEN_URI: ${PISTE_TOKEN_URI}
+      PISTE_CLIENT_ID: ${PISTE_CLIENT_ID}
+      PISTE_CLIENT_SECRET: ${PISTE_CLIENT_SECRET}
+
+      # Keycloak est dans le réseau Docker partagé
+      OAUTH2_ISSUER_URI: http://keycloak:8080/realms/conseil-etat
+
+    ports:
+      - "8087:8080"
+
+    depends_on:
+      textes-legaux-db:
+        condition: service_healthy
+
+volumes:
+  textes-legaux-db-data:
+
+networks:
+  default:
+    name: conseil-etat-net
+    external: true

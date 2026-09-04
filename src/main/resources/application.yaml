@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: service-textes-legaux
+  config:
+    activate:
+      on-profile: piste-sandbox
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://keycloak:8081/realms/conseil-etat}
+      client:
+        registration:
+          piste:
+            client-id: ${PISTE_CLIENT_ID}
+            client-secret: ${PISTE_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope: openid
+        provider:
+          piste:
+            token-uri: ${PISTE_OAUTH_URL:https://sandbox-oauth.piste.gouv.fr/api/oauth/token}
+
+      piste:
+        api:
+          base-url: ${PISTE_API_URL:https://sandbox-api.piste.gouv.fr/dila/legifrance/lf-engine-app}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: service-recherche
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      zipkin:
+        endpoint: ${ZIPKIN_ENDPOINT:http://zipkin:9411/api/v2/spans}
+
+logging:
+  structured:
+    format:
+      console: ecs
+    ecs:
+      service:
+        name: service-recherche
+        version: "1.0"
+        environment: dev

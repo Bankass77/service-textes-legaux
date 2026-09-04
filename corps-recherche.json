@@ -1,0 +1,22 @@
+{
+  "recherche": {
+    "champs": [
+      {
+        "typeChamp": "ALL",
+        "criteres": [
+          {"typeRecherche": "UN_DES_MOTS", "valeur": "référé suspension", "operateur": "ET"}
+        ],
+        "operateur": "ET"
+      }
+    ],
+    "filtres": [
+      {"facette": "NOM_CODE", "valeurs": ["Code de justice administrative"]}
+    ],
+    "pageNumber": 1,
+    "pageSize": 10,
+    "operateur": "ET",
+    "sort": "PERTINENCE",
+    "typePagination": "DEFAUT"
+  },
+  "fond": "CODE_DATE"
+}

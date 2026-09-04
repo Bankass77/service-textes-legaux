@@ -1,0 +1,22 @@
+spring:
+
+  security:
+    oauth2:
+      client:
+
+        registration:
+          piste:
+            provider: piste
+            client-id: ${PISTE_CLIENT_ID}
+            client-secret: ${PISTE_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope:
+              - openid
+
+        provider:
+          piste:
+            token-uri: ${PISTE_TOKEN_URI}
+
+services:
+  piste:
+    base-url: ${PISTE_BASE_URL}

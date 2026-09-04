@@ -1,0 +1,11 @@
+ .env
+*.env
+ *.pem
+*.key
+*.crt
+.idea/
+ *.iml
+target/
+logs/
+*.log
+.DS_Store
